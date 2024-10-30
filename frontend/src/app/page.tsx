@@ -17,7 +17,7 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 10; // Show 10 rows per page
+  const limit = 1000; // Show 10 rows per page
 
   useEffect(() => {
     fetchData();

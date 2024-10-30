@@ -126,20 +126,20 @@ func main() {
 
 		// Fetch assets with pagination and IPs/Ports grouped in subqueries
 		query := `
-    SELECT a.id, a.host, a.comment, a.owner,
-           (SELECT GROUP_CONCAT(ip.address) FROM ips ip WHERE ip.asset_id = a.id) AS ip_addresses,
-           (SELECT GROUP_CONCAT(p.port) FROM ports p WHERE p.asset_id = a.id) AS port_numbers
-    FROM assets a
-    WHERE 1=1
+	SELECT a.id, a.host, a.comment, a.owner,
+		   (SELECT GROUP_CONCAT(ip.address) FROM ips ip WHERE ip.asset_id = a.id) AS ip_addresses,
+		   (SELECT GROUP_CONCAT(p.port) FROM ports p WHERE p.asset_id = a.id) AS port_numbers
+	FROM assets a
+	WHERE 1=1
 `
 		if assetID != "" {
-			query += " AND a.id = ?"
+			query += " AND a.id = ? ORDER BY a.id"
 			rows, err = db.Query(query, assetID)
 		} else if hostFilter != "" {
-			query += " AND a.host LIKE ? LIMIT ? OFFSET ?"
+			query += " AND a.host LIKE ? ORDER BY a.id LIMIT ? OFFSET ?"
 			rows, err = db.Query(query, "%"+hostFilter+"%", limit, offset)
 		} else {
-			query += " LIMIT ? OFFSET ?"
+			query += " ORDER BY a.id LIMIT ? OFFSET ?"
 			rows, err = db.Query(query, limit, offset)
 		}
 
