@@ -56,7 +56,7 @@ func main() {
 	}
 	defer db.Close()
 
-	// Create the tables
+	// Create the tables with indexes for faster querying
 	createTablesSQL := `
 		CREATE TABLE assets (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,7 +77,12 @@ func main() {
 			asset_id INTEGER,
 			port INTEGER NOT NULL,
 			FOREIGN KEY(asset_id) REFERENCES assets(id)
-		);`
+		);
+
+		CREATE INDEX idx_asset_host ON assets(host);
+		CREATE INDEX idx_ip_address ON ips(address);
+		CREATE INDEX idx_port_number ON ports(port);
+	`
 
 	_, err = db.Exec(createTablesSQL)
 	if err != nil {
